@@ -3,6 +3,7 @@ package com.poscodx.mysite.dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.poscodx.mysite.vo.UserVo;
@@ -36,6 +37,35 @@ public class UserDao {
 			
 			result = pstmt.executeUpdate();
 			
+			pstmt.close();
+			
+		} catch (SQLException e) {
+			System.out.println("error:"+e);
+		}
+		
+		return result;
+	}
+
+	public UserVo findByNoAndPasssword(String email, String password) {
+		UserVo result = null;
+		
+		try (
+				Connection conn = connection();
+				PreparedStatement pstmt = conn.prepareStatement("select no, name from user where email = ? and password=password(?)");
+				) {
+			
+			pstmt.setString(1, email);
+			pstmt.setString(2, password);
+			
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				Long no = rs.getLong(1);
+				String name = rs.getString(2);
+				
+				result = new UserVo();
+				result.setNo(no);
+				result.setName(name);
+			}
 			pstmt.close();
 			
 		} catch (SQLException e) {
