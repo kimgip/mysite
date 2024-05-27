@@ -74,4 +74,32 @@ public class UserDao {
 		
 		return result;
 	}
+
+	public UserVo findByNo(Long no) {
+		UserVo result = null;
+		
+		try (
+				Connection conn = connection();
+				PreparedStatement pstmt = conn.prepareStatement("select name, email from user where no = ?");
+				) {
+			
+			pstmt.setLong(1, no);
+			
+			ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				String name = rs.getString(1);
+				String email = rs.getString(2);
+				
+				result = new UserVo();
+				result.setName(name);
+				result.setEmail(email);
+			}
+			pstmt.close();
+			
+		} catch (SQLException e) {
+			System.out.println("error:"+e);
+		}
+		
+		return result;
+	}
 }
