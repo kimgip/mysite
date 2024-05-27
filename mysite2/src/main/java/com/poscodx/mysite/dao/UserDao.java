@@ -37,8 +37,6 @@ public class UserDao {
 			
 			result = pstmt.executeUpdate();
 			
-			pstmt.close();
-			
 		} catch (SQLException e) {
 			System.out.println("error:"+e);
 		}
@@ -66,8 +64,8 @@ public class UserDao {
 				result.setNo(no);
 				result.setName(name);
 			}
-			pstmt.close();
 			
+			rs.close();
 		} catch (SQLException e) {
 			System.out.println("error:"+e);
 		}
@@ -80,7 +78,7 @@ public class UserDao {
 		
 		try (
 				Connection conn = connection();
-				PreparedStatement pstmt = conn.prepareStatement("select name, email from user where no = ?");
+				PreparedStatement pstmt = conn.prepareStatement("select name, email, gender from user where no = ?");
 				) {
 			
 			pstmt.setLong(1, no);
@@ -89,12 +87,42 @@ public class UserDao {
 			if(rs.next()) {
 				String name = rs.getString(1);
 				String email = rs.getString(2);
+				String gender = rs.getString(3);
 				
 				result = new UserVo();
 				result.setName(name);
 				result.setEmail(email);
+				result.setGender(gender);
 			}
 			pstmt.close();
+			
+		} catch (SQLException e) {
+			System.out.println("error:"+e);
+		}
+		
+		return result;
+	}
+
+	public int update(UserVo vo) {
+		int result = 0;
+		
+		try (
+				Connection conn = connection();
+				PreparedStatement pstmt1 = conn.prepareStatement("update user set name=?, gender=? where no = ?");
+				PreparedStatement pstmt2 = conn.prepareStatement("update user set name=?, password=password(?), gender=? where no = ?");
+				) {
+			if ("".equals(vo.getPassword())) {
+				pstmt1.setString(1, vo.getName());
+				pstmt1.setString(2, vo.getGender());
+				pstmt1.setLong(3, vo.getNo());
+				result = pstmt1.executeUpdate();
+			} else {
+				pstmt2.setString(1, vo.getName());
+				pstmt2.setString(2, vo.getPassword());
+				pstmt2.setString(3, vo.getGender());
+				pstmt2.setLong(4, vo.getNo());
+				result = pstmt2.executeUpdate();
+			}
 			
 		} catch (SQLException e) {
 			System.out.println("error:"+e);
