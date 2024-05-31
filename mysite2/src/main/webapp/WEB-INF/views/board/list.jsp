@@ -34,7 +34,7 @@
 								<c:if test="${vo.depth > 0 }">
 									<img src="${pageContext.servletContext.contextPath }/assets/images/reply.png">
 								</c:if>
-								<a href="${pageContext.servletContext.contextPath }/board?a=viewform&no=${vo.no }">${vo.title }</a>
+								<a href="${pageContext.servletContext.contextPath }/board?a=viewform&p=${param.p }&no=${vo.no }">${vo.title }</a>
 							</td>
 							<td>${vo.userName }</td>
 							<td>${vo.hit }</td>
@@ -51,7 +51,7 @@
 				<div class="pager">
 					<ul>
 						<c:choose>
-							<c:when test="${prevP <= 1 || empty param.p }">
+							<c:when test="${prevP <= 1 }">
 								<li>◀</li>
 							</c:when>
 							<c:otherwise>
@@ -60,7 +60,7 @@
 						</c:choose>
 						<c:forEach begin="0" end="${pagerCnt - 1 }" var="i">
 						<c:choose>
-							<c:when test="${param.p == (prevP + i) || (empty param.p && i == 0) }">
+							<c:when test="${param.p == (prevP + i) }">
 								<li class="selected">${prevP + i }</li>	
 							</c:when>
 							<c:when test="${prevP + i > endP }">

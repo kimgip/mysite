@@ -254,7 +254,6 @@ public class BoardDao {
 	
 	public int update(Long no, Long userNo, String title, String contents) {
 		int result = 0;
-		
 		try (
 				Connection conn = connection();
 				) {

@@ -17,13 +17,13 @@ public class ModifyAction implements Action {
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		if (session == null) {
-			response.sendRedirect(request.getContextPath() + "/board?a=viewform&no=" + request.getParameter("no"));
+			response.sendRedirect(request.getContextPath() + "/board");
 			return;
 		}
 
 		UserVo authUser = (UserVo)session.getAttribute("authUser");
 		if (authUser == null) {
-			response.sendRedirect(request.getContextPath() + "/board?a=viewform&no=" + request.getParameter("no"));
+			response.sendRedirect(request.getContextPath() + "/board");
 			return;
 		}
 		
@@ -33,8 +33,7 @@ public class ModifyAction implements Action {
 		Long userNo = authUser.getNo();
 		
 		new BoardDao().update(no, userNo, title, contents);
-		
-		response.sendRedirect(request.getContextPath() + "/board");
+		response.sendRedirect(request.getContextPath() + "/board?a=viewform"+"&p="+request.getParameter("p")+"&no=" + request.getParameter("no"));
 	}
 
 }

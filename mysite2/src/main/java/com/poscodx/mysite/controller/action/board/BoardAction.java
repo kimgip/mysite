@@ -18,7 +18,8 @@ public class BoardAction implements Action {
 		String pageNo = request.getParameter("p");
 		
 		if (pageNo == null) {
-			pageNo = "1";
+			response.sendRedirect(request.getContextPath() + "/board?p=1");
+			return;
 		}
 		
 		Long currP = Long.parseLong(pageNo);

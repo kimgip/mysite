@@ -14,15 +14,30 @@ public class ViewFormAction implements Action {
 
 	@Override
 	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (request.getParameter("p") == null) {
+			response.sendRedirect(request.getContextPath() + "/board");
+			return;
+		}
+		String p = request.getParameter("p");
+		
+		if (request.getParameter("no") == null) {
+			response.sendRedirect(request.getContextPath() + "/board?p=" + p);
+			return;
+		}
+		
 		Long no = Long.parseLong(request.getParameter("no"));
 		
 		boolean visited = false;
+		String views = "";
 		Cookie[] cookies = request.getCookies();
 		if(cookies != null && cookies.length > 0) {
 			for(Cookie cookie : cookies) {
-				if("visitView".equals(cookie.getName().substring(0, 9))) {
-					if (Long.parseLong(cookie.getValue()) == no) {
-						visited = true;
+				if("viewsList".equals(cookie.getName())) {
+					views = cookie.getValue();
+					for (String v : views.split("/")) {
+						if (String.valueOf(no).equals(v)) {
+							visited = true;
+						}
 					}
 				}
 			}
@@ -31,14 +46,14 @@ public class ViewFormAction implements Action {
 		if (!visited) {
 			new BoardDao().hitByNo(no);
 			
-			Cookie cookie = new Cookie("visitView" + String.valueOf(no), String.valueOf(no));
+			Cookie cookie = new Cookie("viewsList", views+String.valueOf(no)+"/");
 			cookie.setPath(request.getContextPath());
 			cookie.setMaxAge(24 * 60 * 60);
 			response.addCookie(cookie);
 		}
 		
 		request.setAttribute("boardVo", new BoardDao().findViewByNo(no));
-		
+		request.setAttribute("p", p);
 		request
 			.getRequestDispatcher("/WEB-INF/views/board/view.jsp")
 			.forward(request, response);
