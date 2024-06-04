@@ -53,7 +53,7 @@ public class UserRepository {
 		
 		try (
 				Connection conn = connection();
-				PreparedStatement pstmt = conn.prepareStatement("select no, name from user where email = ? and password=password(?)");
+				PreparedStatement pstmt = conn.prepareStatement("elect no, name from user where email = ? and password=password(?)");
 				) {
 			
 			pstmt.setString(1, email);
@@ -71,7 +71,7 @@ public class UserRepository {
 			
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println("error:"+e);
+			throw new UserRepositoryException(e.toString());
 		}
 		
 		return result;
