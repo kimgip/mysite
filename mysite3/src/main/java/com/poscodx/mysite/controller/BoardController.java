@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.poscodx.mysite.security.Auth;
 import com.poscodx.mysite.service.BoardService;
 import com.poscodx.mysite.vo.BoardVo;
 import com.poscodx.mysite.vo.UserVo;
@@ -39,14 +40,15 @@ public class BoardController {
 		return "board/view";
 	}
 
+	@Auth
 	@RequestMapping(value="/write", method=RequestMethod.GET)
 	public String write() {
 		return "board/write";
 	}
 	
+	@Auth
 	@RequestMapping(value="/write", method=RequestMethod.POST)
 	public String write(HttpSession session, BoardVo vo) {
-		// access control
 		UserVo authUser = (UserVo)session.getAttribute("authUser");
 		if(authUser == null) {
 			return "redirect:/board";
@@ -66,9 +68,9 @@ public class BoardController {
 		return "redirect:/board";
 	}
 	
+	@Auth
 	@RequestMapping(value="/modify", method=RequestMethod.GET)
 	public String modify(HttpSession session, @RequestParam(value="n", required=true, defaultValue="1") Long viewNo, Model model) {
-		// access control
 		UserVo authUser = (UserVo)session.getAttribute("authUser");
 		if(authUser == null) {
 			return "redirect:/user/join";
@@ -82,9 +84,9 @@ public class BoardController {
 		return "board/modify";
 	}
 	
+	@Auth
 	@RequestMapping(value="/modify", method=RequestMethod.POST)
 	public String modify(HttpSession session, BoardVo vo) {
-		// access control
 		UserVo authUser = (UserVo)session.getAttribute("authUser");
 		if(authUser == null) {
 			return "redirect:/user/join";
@@ -95,9 +97,9 @@ public class BoardController {
 		return "redirect:/board";
 	}
 	
+	@Auth
 	@RequestMapping("/delete")
 	public String delete(HttpSession session, @RequestParam(value="n", required=true, defaultValue="1") Long viewNo) {
-		// access control
 		UserVo authUser = (UserVo)session.getAttribute("authUser");
 		if(authUser == null) {
 			return "redirect:/board";
