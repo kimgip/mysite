@@ -27,12 +27,13 @@ public class AuthInterceptor implements HandlerInterceptor {
 		// 3. Handler Method의 @Auth 가져오기
 		Auth auth = handlerMethod.getMethodAnnotation(Auth.class);
 		
+		// 퀴즈. Handler Method에 @Auth가 없으면 Type(Class)에 붙어 있는 지 확인
 		// 4. Handler Method에 @Auth가 없는 경우
 		if(auth == null) {
 			return true;
 		}
 		
-		// 5. @Auth가 있기 때문에 인증(Authentication)확인
+		// 5. @Auth가 있기 때문에 인증(Authentication) 여부 확인
 		HttpSession session = request.getSession();
 		UserVo authUser = (UserVo)session.getAttribute("authUser");
 		
@@ -41,7 +42,21 @@ public class AuthInterceptor implements HandlerInterceptor {
 			return false;
 		}
 		
-		// 6. @Auth가 붙어 있고 인증도 된 경우
+		// 6. 권한(Authorization) 체크를 위해 @Auth의 role 가져오기("USER", "ADMIN")
+		String role = auth.role();
+		
+		// 7. @AUTH role이 "USER"인 경우, authUser의 role은 상관없다.
+		if("USER".equals(role)) {
+			return true;
+		}
+		
+		// 8. @Auth의 role이 "ADMIN"인 경우, authUser의 role은 반드시 "ADMIN"
+		if(!"ADMIN".equals(authUser.getRole())) {
+			response.sendRedirect(request.getContextPath());
+			return false;
+		}
+		
+		// 9. @Auth(role="ADMIN"), authUser.getRole() == "ADMIN" 
 		return true;
 	}
 
