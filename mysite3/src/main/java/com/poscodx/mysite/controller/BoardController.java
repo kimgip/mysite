@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.poscodx.mysite.security.Auth;
+import com.poscodx.mysite.security.AuthUser;
 import com.poscodx.mysite.service.BoardService;
 import com.poscodx.mysite.vo.BoardVo;
 import com.poscodx.mysite.vo.UserVo;
@@ -48,12 +49,7 @@ public class BoardController {
 	
 	@Auth
 	@RequestMapping(value="/write", method=RequestMethod.POST)
-	public String write(HttpSession session, BoardVo vo) {
-		UserVo authUser = (UserVo)session.getAttribute("authUser");
-		if(authUser == null) {
-			return "redirect:/board";
-		}
-		/////////////////
+	public String write(@AuthUser UserVo authUser, BoardVo vo) {
 		vo.setUserNo(authUser.getNo());
 		if(vo.getNo() != null) {
 			BoardVo parentVo = boardService.getViewInfo(vo.getNo());
@@ -70,12 +66,8 @@ public class BoardController {
 	
 	@Auth
 	@RequestMapping(value="/modify", method=RequestMethod.GET)
-	public String modify(HttpSession session, @RequestParam(value="n", required=true, defaultValue="1") Long viewNo, Model model) {
-		UserVo authUser = (UserVo)session.getAttribute("authUser");
-		if(authUser == null) {
-			return "redirect:/user/join";
-		}
-		/////////////////
+	public String modify(@AuthUser UserVo authUser, @RequestParam(value="n", required=true, defaultValue="1") Long viewNo, Model model) {
+
 		BoardVo vo =  boardService.getContents(viewNo, authUser.getNo());
 		if (vo == null) {
 			return "redirect:/board";
@@ -86,12 +78,8 @@ public class BoardController {
 	
 	@Auth
 	@RequestMapping(value="/modify", method=RequestMethod.POST)
-	public String modify(HttpSession session, BoardVo vo) {
-		UserVo authUser = (UserVo)session.getAttribute("authUser");
-		if(authUser == null) {
-			return "redirect:/user/join";
-		}
-		/////////////////
+	public String modify(@AuthUser UserVo authUser, BoardVo vo) {
+
 		vo.setUserNo(authUser.getNo());
 		boardService.updateContents(vo);
 		return "redirect:/board";
@@ -99,12 +87,7 @@ public class BoardController {
 	
 	@Auth
 	@RequestMapping("/delete")
-	public String delete(HttpSession session, @RequestParam(value="n", required=true, defaultValue="1") Long viewNo) {
-		UserVo authUser = (UserVo)session.getAttribute("authUser");
-		if(authUser == null) {
-			return "redirect:/board";
-		}
-		/////////////////
+	public String delete(@AuthUser UserVo authUser, @RequestParam(value="n", required=true, defaultValue="1") Long viewNo) {
 		
 		boardService.deleteContents(viewNo, authUser.getNo());
 		return "redirect:/board";
