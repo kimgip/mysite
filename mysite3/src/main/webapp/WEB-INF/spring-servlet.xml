@@ -12,8 +12,27 @@
 	<!-- auto proxy -->
 	<aop:aspectj-autoproxy />
 
-	<!-- validator, 기본 messageConverter외의 다른 MessageConverter 등록, ... -->
 	<mvc:annotation-driven>
+		<!-- MessageConverters -->
+		<mvc:message-converters>
+			<bean
+				class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html; charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>application/json; charset=UTF-8</value>
+					</list>
+				</property>
+			</bean>
+		</mvc:message-converters>
+
 		<!-- Argument Resolver 등록 -->
 		<mvc:argument-resolvers>
 			<bean
