@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -29,6 +30,10 @@ public class AuthInterceptor implements HandlerInterceptor {
 		
 		// 퀴즈. Handler Method에 @Auth가 없으면 Type(Class)에 붙어 있는 지 확인
 		// 4. Handler Method에 @Auth가 없는 경우
+		if(auth == null) {
+			auth = handlerMethod.getBean().getClass().getAnnotation(Auth.class);
+		}
+		
 		if(auth == null) {
 			return true;
 		}
