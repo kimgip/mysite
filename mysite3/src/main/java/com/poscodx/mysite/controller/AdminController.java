@@ -37,7 +37,10 @@ public class AdminController {
 		SiteVo siteVo,
 		@RequestParam(value="file1") MultipartFile file
 			) {
-		siteVo.setProfile(siteService.restore(file));
+		String profile = siteService.restore(file);
+		if(profile != null) {
+			siteVo.setProfile(profile);
+		}
 		siteService.updateSite(siteVo);
 		servletContext.removeAttribute("siteVo");
 		return "redirect:/admin";
