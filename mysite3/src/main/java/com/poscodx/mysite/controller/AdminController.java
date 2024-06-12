@@ -1,18 +1,46 @@
 package com.poscodx.mysite.controller;
 
+import javax.servlet.ServletContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.poscodx.mysite.security.Auth;
+import com.poscodx.mysite.service.SiteService;
+import com.poscodx.mysite.vo.SiteVo;
 
-//@Auth(role="ADMIN")
 @Controller
+@Auth(role="ADMIN")
 @RequestMapping("/admin")
 public class AdminController {
+	@Autowired
+	private ServletContext servletContext;
+	
+	@Autowired
+	private ApplicationContext applicationContext;
 
+	@Autowired
+	private SiteService siteService;
+	
 	@RequestMapping("")
-	public String main() {
+	public String main(Model model) {
+		model.addAttribute("siteVo", siteService.getSite());
 		return "admin/main";
+	}
+
+	@RequestMapping("/main/update")
+	public String update(
+		SiteVo siteVo,
+		@RequestParam(value="file1") MultipartFile file
+			) {
+		siteVo.setProfile(siteService.restore(file));
+		siteService.updateSite(siteVo);
+		return "redirect:/admin";
 	}
 
 	@RequestMapping("/guestbook")
