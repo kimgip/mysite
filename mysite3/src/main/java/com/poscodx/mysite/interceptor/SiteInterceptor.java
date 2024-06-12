@@ -19,11 +19,10 @@ public class SiteInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		System.out.println("SiteInterceptor preHandle");
-		String title = (String)request.getServletContext().getAttribute("title");
+		SiteVo siteVo = (SiteVo)request.getServletContext().getAttribute("siteVo");
 		
-		if(title == null) {
-			SiteVo vo =siteService.getSite();
-			request.getServletContext().setAttribute("title", vo.getTitle());
+		if(siteVo == null) {
+			request.getServletContext().setAttribute("siteVo", siteService.getSite());
 		}
 		return true;
 	}

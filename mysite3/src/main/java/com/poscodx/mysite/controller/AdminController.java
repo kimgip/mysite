@@ -28,8 +28,7 @@ public class AdminController {
 	private SiteService siteService;
 	
 	@RequestMapping("")
-	public String main(Model model) {
-		model.addAttribute("siteVo", siteService.getSite());
+	public String main() {
 		return "admin/main";
 	}
 
@@ -40,6 +39,7 @@ public class AdminController {
 			) {
 		siteVo.setProfile(siteService.restore(file));
 		siteService.updateSite(siteVo);
+		servletContext.removeAttribute("siteVo");
 		return "redirect:/admin";
 	}
 
