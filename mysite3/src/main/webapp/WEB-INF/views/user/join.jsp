@@ -63,7 +63,9 @@ $(function() {
 					<input id="btn-check" type="button" value="중복 확인">
 					<img id="img-check" src="${pageContext.request.contextPath }/assets/images/check.png" style="vertical-align:bottom; width:24px; display:none">
 					
-					<label class="block-label">패스워드</label>
+					<label class="block-label">
+						<spring:message code="user.join.label.password" />
+					</label>
 					<input name="password" type="password" value="">
 					
 					<fieldset>
