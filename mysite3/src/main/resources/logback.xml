@@ -28,7 +28,7 @@
 		</triggeringPolicy>
 	</appender>
 
-	<logger name="com.poscodx.mysite.exception" level="error" additivity="false">
+	<logger name="com.poscodx.mysite" level="error" additivity="false">
             <appender-ref ref="fileAppender" />
             <appender-ref ref="consoleAppender" />
     </logger>   
