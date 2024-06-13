@@ -54,7 +54,10 @@ $(function() {
 					<p style="color:#f00; text-align:left; padding:0">
 						<spring:hasBindErrors name="userVo">
 							<c:if test="${errors.hasFieldErrors('name') }">
+							<!--  
 								${errors.getFieldError('name').defaultMessage }
+							-->
+								<spring:message code="${errors.getFieldError('name').codes[0] }" />
 							</c:if>
 						</spring:hasBindErrors>
 					</p>
