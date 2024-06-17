@@ -2,10 +2,10 @@ package com.poscodx.mysite.controller;
 
 import javax.servlet.ServletContext;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,15 +34,22 @@ public class AdminController {
 
 	@RequestMapping("/main/update")
 	public String update(
-		SiteVo siteVo,
+		SiteVo vo,
 		@RequestParam(value="file1") MultipartFile file
 			) {
 		String profile = siteService.restore(file);
 		if(profile != null) {
-			siteVo.setProfile(profile);
+			vo.setProfile(profile);
 		}
-		siteService.updateSite(siteVo);
-		servletContext.removeAttribute("siteVo");
+		siteService.updateSite(vo);
+		servletContext.setAttribute("siteVo", vo); // servletContext.removeAttribute(siteVo);
+		SiteVo site = applicationContext.getBean(SiteVo.class);
+		//site.setTitle(vo.getTitle());
+		//site.setWelcome(vo.getWelcome());
+		//site.setProfile(vo.getProfile());
+		//site.setDescription(vo.getDescription());
+		BeanUtils.copyProperties(vo, site);
+		
 		return "redirect:/admin";
 	}
 
