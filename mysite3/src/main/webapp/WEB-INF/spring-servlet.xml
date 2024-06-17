@@ -87,6 +87,13 @@
 		</property>
 	</bean>
 
+	<!-- Locale Resolver -->
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="cookieName" value="lang" />
+		<property name="cookieHttpOnly" value="false" />
+	</bean>
+
 	<!-- 6. MessageSource -->
 	<bean id="messageSource"
 		class="org.springframework.context.support.ResourceBundleMessageSource">
@@ -113,9 +120,10 @@
 	<!-- mvc url-resource mapping -->
 	<mvc:resources mapping="/images/**"
 		location="file:/fileupload-files/" />
-		
+
 	<!-- ApplicationContextEventListener -->
-	<bean class="com.poscodx.mysite.event.ApplicationContextEventListener"/>
+	<bean
+		class="com.poscodx.mysite.event.ApplicationContextEventListener" />
 
 	<context:annotation-config />
 	<context:component-scan
