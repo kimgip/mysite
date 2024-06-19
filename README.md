@@ -68,9 +68,10 @@
 5. View
    - JSP
    - JSTL & EL
-6. Security **
+6. Security
    - Authentication(인증) & Authorization(권한)
-   - Spring Secuirty
+   - Spring Interceptor & ArgumentResolver
+   - Declative Annotaions: @Auth, @AuthUser 지원
 7. Serving Static Resources
    - Spring Resource Handler: External Resources(files uploaded)
    - Default Servlet Handler: assets(images, css, js, etc..)
@@ -92,7 +93,7 @@
    - Transaction: DataSourceTransactionManager(Spring JDBC), @Transactional(Transaction AOP Proxy)
 5. View
    - Thymeleaf Template View **
-6. Security
+6. Security **
    - Authentication(인증) & Authorization(권한)
    - Spring Secuirty
 7. Serving Static Resources
