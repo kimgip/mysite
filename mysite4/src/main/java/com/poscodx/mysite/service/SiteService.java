@@ -5,6 +5,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,9 +15,11 @@ import com.poscodx.mysite.repository.SiteRepository;
 import com.poscodx.mysite.vo.SiteVo;
 
 @Service
+@PropertySource("classpath:com/poscodx/mysite/config/web/fileupload.properties")
 public class SiteService {
-	private static String SAVE_PATH="/fileupload-files";
-	private static String URL_PATH="/images"; // 가상 url
+	@Autowired
+	private Environment env;
+	
 	private SiteRepository siteRepository;
 	
 	public SiteService(SiteRepository siteRepository) {
@@ -33,7 +38,7 @@ public class SiteService {
 		String url = null;
 		
 		try {
-			File uploadDirectory = new File(SAVE_PATH);
+			File uploadDirectory = new File(env.getProperty("fileupload.uploadLocation"));
 			if(!uploadDirectory.exists()) {
 				uploadDirectory.mkdirs();
 			}
@@ -52,11 +57,11 @@ public class SiteService {
 			System.out.println("######"+fileSize);
 			
 			byte[] data = file.getBytes();
-			OutputStream os = new FileOutputStream(SAVE_PATH + "/" + saveFilename);
+			OutputStream os = new FileOutputStream(env.getProperty("fileupload.uploadLocation") + "/" + saveFilename);
 			os.write(data);
 			os.close();
 			
-			url = URL_PATH + "/" + saveFilename;
+			url = env.getProperty("fileupload.resourceUrl") + "/" + saveFilename;
 		} catch(IOException ex) {
 			throw new RuntimeException(ex);
 		}
