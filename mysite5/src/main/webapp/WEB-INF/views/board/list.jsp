@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -40,11 +41,14 @@
 							<td>${vo.hit }</td>
 							<td>${vo.regDate }</td>
 							
-							<c:if test="${vo.userName eq authUser.name }">
-								<td><a href="${pageContext.servletContext.contextPath }/board/delete?n=${vo.no }" class="del">
-								<img src="${pageContext.servletContext.contextPath }/assets/images/recycle.png">
-								</a></td>
-							</c:if>
+							<sec:authorize access="isAuthenticated()">
+								<sec:authentication property="principal" var="authUser"/>
+								<c:if test="${vo.userName eq authUser.name }">
+									<td><a href="${pageContext.servletContext.contextPath }/board/delete?n=${vo.no }" class="del">
+									<img src="${pageContext.servletContext.contextPath }/assets/images/recycle.png">
+									</a></td>
+								</c:if>
+							</sec:authorize>
 						</tr>
 					</c:forEach>
 				</table>
@@ -86,11 +90,11 @@
 				</div>					
 				<!-- pager 추가 -->
 				
-				<c:if test="${not empty authUser }">
+				<sec:authorize access="isAuthenticated()">
 					<div class="bottom">
 						<a href="${pageContext.servletContext.contextPath }/board/write" id="new-book">글쓰기</a>
 					</div>		
-				</c:if>		
+				</sec:authorize>	
 			</div>
 		</div>
 		<c:import url="/WEB-INF/views/includes/navigation.jsp">

@@ -3,14 +3,13 @@ package com.poscodx.mysite.controller;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.poscodx.mysite.security.Auth;
-import com.poscodx.mysite.security.AuthUser;
 import com.poscodx.mysite.service.BoardService;
 import com.poscodx.mysite.vo.BoardVo;
 import com.poscodx.mysite.vo.UserVo;
@@ -38,16 +37,14 @@ public class BoardController {
 		return "board/view";
 	}
 
-	@Auth
 	@RequestMapping(value="/write", method=RequestMethod.GET)
 	public String write() {
 		return "board/write";
 	}
 	
-	@Auth
 	@RequestMapping(value="/write", method=RequestMethod.POST)
-	public String write(@AuthUser UserVo authUser, BoardVo vo) {
-		vo.setUserNo(authUser.getNo());
+	public String write(Authentication authentication, BoardVo vo) {
+		vo.setUserNo(((UserVo)authentication.getPrincipal()).getNo());
 		if(vo.getNo() != null) {
 			BoardVo parentVo = boardService.getViewInfo(vo.getNo());
 			if (parentVo != null) {
@@ -61,11 +58,10 @@ public class BoardController {
 		return "redirect:/board";
 	}
 	
-	@Auth
 	@RequestMapping(value="/modify", method=RequestMethod.GET)
-	public String modify(@AuthUser UserVo authUser, @RequestParam(value="n", required=true, defaultValue="1") Long viewNo, Model model) {
+	public String modify(Authentication authentication, @RequestParam(value="n", required=true, defaultValue="1") Long viewNo, Model model) {
 
-		BoardVo vo =  boardService.getContents(viewNo, authUser.getNo());
+		BoardVo vo =  boardService.getContents(viewNo, ((UserVo)authentication.getPrincipal()).getNo());
 		if (vo == null) {
 			return "redirect:/board";
 		}
@@ -73,20 +69,18 @@ public class BoardController {
 		return "board/modify";
 	}
 	
-	@Auth
 	@RequestMapping(value="/modify", method=RequestMethod.POST)
-	public String modify(@AuthUser UserVo authUser, BoardVo vo) {
+	public String modify(Authentication authentication, BoardVo vo) {
 
-		vo.setUserNo(authUser.getNo());
+		vo.setUserNo(((UserVo)authentication.getPrincipal()).getNo());
 		boardService.updateContents(vo);
 		return "redirect:/board";
 	}
 	
-	@Auth
 	@RequestMapping("/delete")
-	public String delete(@AuthUser UserVo authUser, @RequestParam(value="n", required=true, defaultValue="1") Long viewNo) {
+	public String delete(Authentication authentication, @RequestParam(value="n", required=true, defaultValue="1") Long viewNo) {
 		
-		boardService.deleteContents(viewNo, authUser.getNo());
+		boardService.deleteContents(viewNo, ((UserVo)authentication.getPrincipal()).getNo());
 		return "redirect:/board";
 	}
 	

@@ -12,7 +12,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import com.poscodx.mysite.config.web.FileUploadConfig;
 import com.poscodx.mysite.config.web.LocaleConfig;
 import com.poscodx.mysite.config.web.MvcConfig;
-import com.poscodx.mysite.config.web.SecurityConfig;
 import com.poscodx.mysite.event.ApplicationContextEventListener;
 import com.poscodx.mysite.interceptor.SiteInterceptor;
 

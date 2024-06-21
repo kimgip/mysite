@@ -1,23 +1,16 @@
 package com.poscodx.mysite.controller;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.poscodx.mysite.security.Auth;
-import com.poscodx.mysite.security.AuthUser;
 import com.poscodx.mysite.service.UserService;
 import com.poscodx.mysite.vo.UserVo;
 
@@ -58,14 +51,13 @@ public class UserController {
 		return "user/login";
 	}
 	
-	@Auth
 	@RequestMapping(value="/update", method=RequestMethod.GET)
 	public String update(Authentication authentication, Model model) {
 //		SecurityContextHolder(Spring Security ThreadLocal Helper Class) 기반
 //		SecurityContext sc = SecurityContextHolder.getContext();
 		
 //		HttpSession 기반
-//		SecurityContext sc = (SecurityContext)session.getAttribute(HttpSecurity);
+//		SecurityContext sc = (SecurityContext)session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
 //		Authentication authentication = sc.getAuthentication();
 		UserVo vo = (UserVo)authentication.getPrincipal();
 
@@ -74,21 +66,12 @@ public class UserController {
 		return "user/update";
 	}
 	
-	@Auth
 	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public String update(@AuthUser UserVo authUser, UserVo vo) {
-		vo.setNo(authUser.getNo());
+	public String update(Authentication authentication, UserVo vo) {
+		vo.setNo(((UserVo)authentication.getPrincipal()).getNo());
 		userService.update(vo);
-		
-		authUser.setName(vo.getName());
+		// authentication 내용도 업데이트 해야하는데..
 		return "redirect:/user/update";
 	}
 	
-	@RequestMapping("/auth")
-	public void auth() {
-	}
-	
-	@RequestMapping("/logout")
-	public void logout() {
-	}
 }

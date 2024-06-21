@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%
 	pageContext.setAttribute("newline", "\n");
@@ -38,12 +39,13 @@
 				</table>
 				<div class="bottom">
 					<a href="${pageContext.request.contextPath }/board?kwd=${param.kwd }">글목록</a>
-					<c:if test="${not empty authUser}">
+					<sec:authorize access="isAuthenticated()">
+						<sec:authentication property="principal" var="authUser"/>
 						<c:if test="${boardVo.userNo eq authUser.no }">
 							<a href="${pageContext.request.contextPath }/board/modify?n=${param.n }">글수정</a>
 						</c:if>
 						<a href="${pageContext.request.contextPath }/board/write?n=${param.n }">답글달기</a>
-					</c:if>
+					</sec:authorize>
 				</div>
 			</div>
 		</div>
