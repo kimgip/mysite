@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <script src="${pageContext.request.contextPath }/assets/js/jquery/jquery-1.9.0.js"></script>
 <script>
@@ -34,18 +35,15 @@ $(function(){
 		</c:choose>
 	</div>
 	<ul>
-		<c:if test="${empty authUser }">
-			<li><a href="${pageContext.request.contextPath }/user/login">로그인</a>
-			<li>
-			<li><a href="${pageContext.request.contextPath }/user/join">회원가입</a>
-			<li>
-		</c:if>
-		<c:if test="${not empty authUser }">
-			<li><a href="${pageContext.request.contextPath }/user/update">회원정보수정</a>
-			<li>
-			<li><a href="${pageContext.request.contextPath }/user/logout">로그아웃</a>
-			<li>
-			<li>${authUser.name }님안녕하세요^^;</li>
-		</c:if>
+		<sec:authorize access="!isAuthenticated()">
+			<li><a href="${pageContext.request.contextPath }/user/login">로그인</a></li>
+			<li><a href="${pageContext.request.contextPath }/user/join">회원가입</a></li>
+		</sec:authorize>
+		<sec:authorize access="isAuthenticated()">
+			<sec:authentication property="principal" var="user"/>
+			<li><a href="${pageContext.request.contextPath }/user/update">회원정보수정</a></li>
+			<li><a href="${pageContext.request.contextPath }/user/logout">로그아웃</a></li>
+			<li>${user.name }님안녕하세요^^;</li>
+		</sec:authorize>
 	</ul>
 </div>

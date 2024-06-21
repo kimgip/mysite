@@ -1,8 +1,13 @@
 package com.poscodx.mysite.controller;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -55,8 +60,15 @@ public class UserController {
 	
 	@Auth
 	@RequestMapping(value="/update", method=RequestMethod.GET)
-	public String update(@AuthUser UserVo authUser, Model model) {
-		UserVo vo = userService.getUser(authUser.getNo());
+	public String update(Authentication authentication, Model model) {
+//		SecurityContextHolder(Spring Security ThreadLocal Helper Class) 기반
+//		SecurityContext sc = SecurityContextHolder.getContext();
+		
+//		HttpSession 기반
+//		SecurityContext sc = (SecurityContext)session.getAttribute(HttpSecurity);
+//		Authentication authentication = sc.getAuthentication();
+		UserVo vo = (UserVo)authentication.getPrincipal();
+
 		model.addAttribute("userVo", vo);
 		
 		return "user/update";
