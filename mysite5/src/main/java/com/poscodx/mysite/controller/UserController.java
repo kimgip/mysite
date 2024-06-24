@@ -46,7 +46,7 @@ public class UserController {
 		return "user/joinsuccess";
 	}
 	
-	@RequestMapping(value="/login", method=RequestMethod.GET)
+	@RequestMapping("/login")
 	public String login() {
 		return "user/login";
 	}
@@ -59,8 +59,8 @@ public class UserController {
 //		HttpSession 기반
 //		SecurityContext sc = (SecurityContext)session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
 //		Authentication authentication = sc.getAuthentication();
-		UserVo vo = (UserVo)authentication.getPrincipal();
-
+		UserVo vo = userService.getUser(((UserVo)authentication.getPrincipal()).getNo());
+		
 		model.addAttribute("userVo", vo);
 		
 		return "user/update";
@@ -68,9 +68,12 @@ public class UserController {
 	
 	@RequestMapping(value="/update", method=RequestMethod.POST)
 	public String update(Authentication authentication, UserVo vo) {
-		vo.setNo(((UserVo)authentication.getPrincipal()).getNo());
+		UserVo authVo = (UserVo)authentication.getPrincipal();
+		vo.setNo(authVo.getNo());
+		
 		userService.update(vo);
-		// authentication 내용도 업데이트 해야하는데..
+		
+		authVo.setName(vo.getName());
 		return "redirect:/user/update";
 	}
 	
