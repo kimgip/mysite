@@ -92,7 +92,8 @@
    - Repository(DAO) 구현: MyBatis
    - Transaction: DataSourceTransactionManager(Spring JDBC), @Transactional(Transaction AOP Proxy)
 5. View
-   - Thymeleaf Template View **
+   - JSP
+   - JSTL & EL
 6. Security **
    - Authentication(인증) & Authorization(권한)
    - Spring Secuirty
@@ -120,7 +121,8 @@
    - Repository(DAO) 구현: MyBatis
    - Transaction: DataSourceTransactionManager(Spring JDBC), @Transactional(Transaction AOP Proxy)
 5. View
-   - Thymeleaf Template View
+   - JSP
+   - JSTL & EL
 6. Security
    - Authentication(인증) & Authorization(권한)
    - Spring Secuirty
@@ -146,7 +148,7 @@
    - Repository(DAO) 구현: MyBatis
    - Transaction: DataSourceTransactionManager(Spring JDBC), @Transactional(Transaction AOP Proxy)
 5. View
-   - Thymeleaf Template View
+   - Thymeleaf Template View **
 6. Security
    - Authentication(인증) & Authorization(권한)
    - Spring Secuirty
