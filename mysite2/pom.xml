@@ -2,12 +2,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.poscodx</groupId>
-		<artifactId>mysite</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
+	<groupId>com.poscodx</groupId>
 	<artifactId>mysite2</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<properties>
@@ -24,14 +21,14 @@
 			<artifactId>mariadb-java-client</artifactId>
 			<version>3.2.0</version>
 		</dependency>
-		
+
 		<!-- jstl-->
 		<dependency>
 			<groupId>jstl</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-		
+
 		<!-- servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
