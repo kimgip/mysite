@@ -7,9 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -58,7 +56,6 @@ public class SecurityConfig {
     		.usernameParameter("email")
     		.passwordParameter("password" )
     		.defaultSuccessUrl("/")
-//    		.failureUrl("/user/login?result=fail")
     		.failureHandler(new AuthenticationFailureHandler() {
 				
 				@Override
