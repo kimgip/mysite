@@ -16,7 +16,6 @@ import com.poscodx.mysite.event.ApplicationContextEventListener;
 import com.poscodx.mysite.interceptor.SiteInterceptor;
 
 @SpringBootConfiguration
-@EnableWebMvc
 public class MvcConfig implements WebMvcConfigurer {
 	// Locale Resolver
 	@Bean
