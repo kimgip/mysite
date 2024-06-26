@@ -77,7 +77,7 @@ public class SecurityConfig {
     			registry
     				/* ACL */
     				.requestMatchers(new RegexRequestMatcher("^/admin/?.*$", null)).hasRole("ADMIN")
-    				.requestMatchers(new RegexRequestMatcher("^/board/(write|modify|delete)?/.*$", null)).hasAnyRole("ADMIN", "USER")
+    				.requestMatchers(new RegexRequestMatcher("^/board/?(write|modify|delete).*$", null)).hasAnyRole("ADMIN", "USER")
     				.requestMatchers(new RegexRequestMatcher("^/user/update$", null)).hasAnyRole("ADMIN", "USER")
     				
     	    		.anyRequest()
