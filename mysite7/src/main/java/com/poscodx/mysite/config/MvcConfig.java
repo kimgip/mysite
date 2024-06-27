@@ -11,6 +11,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+import org.thymeleaf.spring5.ISpringTemplateEngine;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import com.poscodx.mysite.event.ApplicationContextEventListener;
 import com.poscodx.mysite.interceptor.SiteInterceptor;
@@ -27,15 +29,29 @@ public class MvcConfig implements WebMvcConfigurer {
 		return localeResolver;
 	}
 
-	// View Resolver
+	// JSP View Resolver
 	@Bean
 	public ViewResolver viewResolver() {
 		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
 		viewResolver.setViewClass(JstlView.class);
-		viewResolver.setPrefix("/WEB-INF/views/");
+		viewResolver.setPrefix("/WEB-INF/");
 		viewResolver.setSuffix(".jsp");
 		viewResolver.setExposeContextBeansAsAttributes(true);
 		viewResolver.setExposedContextBeanNames("site");
+		viewResolver.setViewNames("views/*");
+		viewResolver.setOrder(0);
+		
+		return viewResolver;
+	}
+	
+	// Thymeleaf View Resolver
+	@Bean
+	public ViewResolver thymeleafViewResolver(ISpringTemplateEngine templateEngine) {
+		ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+
+		viewResolver.setTemplateEngine(templateEngine);
+		viewResolver.setCharacterEncoding("UTF-8");
+		viewResolver.setOrder(1);
 
 		return viewResolver;
 	}

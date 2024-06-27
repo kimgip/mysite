@@ -20,7 +20,16 @@ spring:
       # view:
          # prefix: /WEB-INF/views/
          # suffix: .jsp
-         
+
+   # thymeleaf
+   thymeleaf:
+      check-template-location: true
+      mode: HTML
+      prefix: classpath:templates/
+      suffix: .html
+      encoding: UTF-8
+      cache: false
+
    # web
    web:
       resources:
@@ -38,6 +47,11 @@ spring:
          enabled: true
          max-file-size: 50MB
          max-request-size: 10MB
+
+   error:
+      whitelabel:
+         enabled: false
+      path: /error
 
    # datasource
    datasource:
@@ -61,11 +75,6 @@ server:
       encoding:
          charset: utf-8
          enabled: true
-   error:
-      whitelabel:
-         enabled: false
-      path: /error
-
 
 # logging
 logging:
