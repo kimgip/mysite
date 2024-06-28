@@ -39,7 +39,6 @@ public class MvcConfig implements WebMvcConfigurer {
 		viewResolver.setExposeContextBeansAsAttributes(true);
 		viewResolver.setExposedContextBeanNames("site");
 		viewResolver.setViewNames("views/*");
-		viewResolver.setOrder(0);
 		
 		return viewResolver;
 	}
@@ -51,7 +50,6 @@ public class MvcConfig implements WebMvcConfigurer {
 
 		viewResolver.setTemplateEngine(templateEngine);
 		viewResolver.setCharacterEncoding("UTF-8");
-		viewResolver.setOrder(1);
 
 		return viewResolver;
 	}

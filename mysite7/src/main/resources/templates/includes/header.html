@@ -1,9 +1,4 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<script src="${pageContext.request.contextPath }/assets/js/jquery/jquery-1.9.0.js"></script>
+<script src="@{/assets/js/jquery/jquery-1.9.0.js}"></script>
 <script>
 $(function(){
 	$("#languages a").click(function(event){
@@ -22,17 +17,16 @@ $(function(){
 <div id="header">
 	<h1>
 		<!-- ${siteVo.title } -->
-		${site.title }
+		[[${site.title }]]
 	</h1>
 	<div id="languages">
-		<c:choose>
-			<c:when test="${language == 'en' }">
-				<a href="" data-lang="ko">KR</a><a href="" data-lang="en" class="active">EN</a>
-			</c:when>
-			<c:otherwise>
-				<a href="" data-lang="ko" class="active">KR</a><a href="" data-lang="en">EN</a>
-			</c:otherwise>
-		</c:choose>
+		<th:block th:if="${language == 'en' }" >
+			<a href="" data-lang="ko">KR</a>
+			<a href="" data-lang="en" class="active">EN</a>
+		</th:block>
+		<th:block th:unless="${language == 'en' }" >
+			<a href="" data-lang="ko" class="active">KR</a><a href="" data-lang="en">EN</a>
+		</th:block>
 	</div>
 	<ul>
 		<sec:authorize access="!isAuthenticated()">

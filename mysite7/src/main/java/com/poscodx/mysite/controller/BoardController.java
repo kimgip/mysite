@@ -27,7 +27,7 @@ public class BoardController {
 		Map<String, Object> map = boardService.getContentsList(pageNo, keyword);
 		model.addAllAttributes(map);
 		model.addAttribute("keyword", keyword);
-		return "board/list";
+		return "views/board/list";
 	}
 	
 	@RequestMapping("/view")
