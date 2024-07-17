@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
@@ -25,44 +24,22 @@ public class MvcConfig implements WebMvcConfigurer {
 		CookieLocaleResolver localeResolver = new CookieLocaleResolver();
 		localeResolver.setCookieName("lang");
 		localeResolver.setCookieHttpOnly(false);
-
+		
 		return localeResolver;
 	}
-
-	// JSP View Resolver
-	@Bean
-	public ViewResolver viewResolver() {
-		InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
-		viewResolver.setViewClass(JstlView.class);
-		viewResolver.setPrefix("/WEB-INF/");
-		viewResolver.setSuffix(".jsp");
-		viewResolver.setExposeContextBeansAsAttributes(true);
-		viewResolver.setExposedContextBeanNames("site");
-		viewResolver.setViewNames("views/*");
-		
-		return viewResolver;
-	}
 	
-	// Thymeleaf View Resolver
-	@Bean
-	public ViewResolver thymeleafViewResolver(ISpringTemplateEngine templateEngine) {
-		ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-
-		viewResolver.setTemplateEngine(templateEngine);
-		viewResolver.setCharacterEncoding("UTF-8");
-
-		return viewResolver;
-	}
-
 	// Site Interceptor
 	@Bean
 	public HandlerInterceptor siteInterceptor() {
 		return new SiteInterceptor();
 	}
-
+	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(siteInterceptor()).addPathPatterns("/**").excludePathPatterns("/assets/**");
+		registry
+			.addInterceptor(siteInterceptor())
+			.addPathPatterns("/**")
+			.excludePathPatterns("/assets/**");
 	}
 
 	// ApplicationContext Event Listener
@@ -70,5 +47,4 @@ public class MvcConfig implements WebMvcConfigurer {
 	public ApplicationContextEventListener applicationContextEventListener() {
 		return new ApplicationContextEventListener();
 	}
-
 }

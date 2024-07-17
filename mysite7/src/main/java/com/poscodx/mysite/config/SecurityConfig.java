@@ -37,7 +37,7 @@ public class SecurityConfig {
                 web
             		.ignoring()
             		.requestMatchers(new AntPathRequestMatcher("/favicon.ico"))
-                	.requestMatchers(new AntPathRequestMatcher("/assets/**"));
+            		.requestMatchers(new AntPathRequestMatcher("/assets/**"));
             }
         };
     }
@@ -47,17 +47,16 @@ public class SecurityConfig {
     	http
     		.logout()
     		.logoutUrl("/user/logout")
-    		.logoutSuccessUrl("/")
     		.and()
     		
-    		.formLogin()
-    		.loginPage("/user/login")
-    		.loginProcessingUrl("/user/auth")
-    		.usernameParameter("email")
-    		.passwordParameter("password" )
-    		.defaultSuccessUrl("/")
-    		.failureHandler(new AuthenticationFailureHandler() {
-				
+       		.formLogin()
+       		.loginPage("/user/login")
+       		.loginProcessingUrl("/user/auth")
+       		.usernameParameter("email")
+       		.passwordParameter("password")
+       		.defaultSuccessUrl("/")
+       		// .failureUrl("/user/login?result=fail")
+       		.failureHandler(new AuthenticationFailureHandler() {
 				@Override
 				public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 						AuthenticationException exception) throws IOException, ServletException {
@@ -66,27 +65,32 @@ public class SecurityConfig {
 						.getRequestDispatcher("/user/login")
 						.forward(request, response);
 				}
-			})
-    		.and()
-    		
-    		.csrf()
-    		.disable()
-    		
-    		.authorizeHttpRequests(registry -> {
-    			registry
-    				/* ACL */
-    				.requestMatchers(new RegexRequestMatcher("^/admin/?.*$", null)).hasRole("ADMIN")
-    				.requestMatchers(new RegexRequestMatcher("^/board/?(write|modify|delete).*$", null)).hasAnyRole("ADMIN", "USER")
-    				.requestMatchers(new RegexRequestMatcher("^/user/update$", null)).hasAnyRole("ADMIN", "USER")
-    				
-    	    		.anyRequest()
-    	    		.permitAll();
+       		})
+       		.and()
+       		
+       		.csrf()
+       		.disable()
+    	
+       		.authorizeHttpRequests(registry -> {
+       			registry
+       				/* ACL */
+   					.requestMatchers(new RegexRequestMatcher("^/admin/?.*$", null))
+   					.hasRole("ADMIN")
+
+   					.requestMatchers(new RegexRequestMatcher("^/board/?(write|reply|delete|modify).*$", null))
+   					.hasAnyRole("ADMIN", "USER")
+
+   					.requestMatchers(new RegexRequestMatcher("^/user/update$", null))
+   					.hasAnyRole("ADMIN", "USER")
+       	       		
+       				.anyRequest()
+       	       		.permitAll();
 			});
-//    		.exceptionHandling(exceptionHandlingConfigurer -> {
-//    			exceptionHandlingConfigurer.accessDeniedPage("/WEB-INF/views/error/403.jsp");
-//    		});
-    		
-        return http.build();
+//       		.exceptionHandling(exceptionHandlingConfigurer -> {
+//       			exceptionHandlingConfigurer.accessDeniedPage("/WEB-INF/views/error/403.jsp")
+//			});
+       	
+    	return http.build();
     }
     
     // Authentication Manager
@@ -95,6 +99,7 @@ public class SecurityConfig {
     	DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
     	authenticationProvider.setPasswordEncoder(passwordEncoder);
     	authenticationProvider.setUserDetailsService(userDetailsService);
+    	
     	return new ProviderManager(authenticationProvider);
     }
     
@@ -107,4 +112,5 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
     	return new UserDetailsServiceImpl();
     }
+    
 }

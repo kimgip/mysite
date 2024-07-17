@@ -12,13 +12,14 @@ import com.poscodx.mysite.service.SiteService;
 import com.poscodx.mysite.vo.SiteVo;
 
 public class ApplicationContextEventListener {
+	
 	@Autowired
 	private ApplicationContext applicationContext;
-	
+
 	@EventListener({ContextRefreshedEvent.class})
 	public void handleContextRefreshEvent() {
-		System.out.println("---Context Refreshed Event Received---");
-		
+		System.out.println("--- Context Refreshed Event Received ---");
+	
 		SiteService siteService = applicationContext.getBean(SiteService.class);
 		SiteVo vo = siteService.getSite();
 		
@@ -31,7 +32,7 @@ public class ApplicationContextEventListener {
 		GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
 		beanDefinition.setBeanClass(SiteVo.class);
 		beanDefinition.setPropertyValues(propertyValues);
-
+		
 		BeanDefinitionRegistry registry = (BeanDefinitionRegistry)applicationContext.getAutowireCapableBeanFactory();
 		registry.registerBeanDefinition("site", beanDefinition);
 	}

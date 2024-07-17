@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="${@site.title}"></title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<link th:href="@{/assets/css/gallery.css}" rel="stylesheet" type="text/css">
+<link th:href="@{/assets/css/lightbox.css}" rel="stylesheet" type="text/css">
+<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" th:src="@{/assets/js/jquery/jquery-1.9.0.js}"></script>
+<script type="text/javascript" th:src="@{/assets/js/lightbox.js}"></script>
+</head>
+<body>
+	<div id="container">
+		<th:block th:include="includes/header"></th:block>
+		<div id="content">
+			<div id="gallery">
+				<div>
+					<h1>갤러리</h1>
+					<a href="" id="upload-image" sec:authorize="hasRole('ADMIN')">이미지 올리기</a>
+				</div>
+				<ul>
+					<li>
+						<a	th:href="@{/assets/gallery-examples/im1.jpg}"
+							class="image"
+							data-lightbox="gallery"
+							th:style="|background-image:url('@{/assets/gallery-examples/im1.jpg}')|">&nbsp;</a>
+						<a	href="" class="del-button" title="삭제" sec:authorize="hasRole('ADMIN')">삭제</a>
+					</li>
+					<li>
+						<a	th:href="@{/assets/gallery-examples/im2.jpg}"
+							class="image"
+							data-lightbox="gallery"
+							th:style="|background-image:url('@{/assets/gallery-examples/im2.jpg}')|">&nbsp;</a>
+						<a	href="" class="del-button" title="삭제" sec:authorize="hasRole('ADMIN')">삭제</a>
+					</li>
+					<li>
+						<a	th:href="@{/assets/gallery-examples/im3.jpg}"
+							class="image"
+							data-lightbox="gallery"
+							th:style="|background-image:url('@{/assets/gallery-examples/im3.jpg}')|">&nbsp;</a>
+						<a	href="" class="del-button" title="삭제" sec:authorize="hasRole('ADMIN')">삭제</a>
+					</li>
+					<li>
+						<a	th:href="@{/assets/gallery-examples/im5.jpg}"
+							class="image"
+							data-lightbox="gallery"
+							th:style="|background-image:url('@{/assets/gallery-examples/im5.jpg}')|">&nbsp;</a>
+						<a	href="" class="del-button" title="삭제" sec:authorize="hasRole('ADMIN')">삭제</a>
+					</li>
+					<li>
+						<a	th:href="@{/assets/gallery-examples/im6.jpg}"
+							class="image"
+							data-lightbox="gallery"
+							th:style="|background-image:url('@{/assets/gallery-examples/im6.jpg}')|">&nbsp;</a>
+						<a	href="" class="del-button" title="삭제" sec:authorize="hasRole('ADMIN')">삭제</a>
+					</li>
+					<li>
+						<a	th:href="@{/assets/gallery-examples/im3.jpg}"
+							class="image"
+							data-lightbox="gallery"
+							th:style="|background-image:url('@{/assets/gallery-examples/im3.jpg}')|">&nbsp;</a>
+						<a	href="" class="del-button" title="삭제" sec:authorize="hasRole('ADMIN')">삭제</a>
+					</li>																				
+				</ul>
+			</div>
+
+			<div id="dialog-upload-form" title="이미지 업로드" style="display: none" sec:authorize="hasRole('ADMIN')">
+				<p class="validateTips normal">이미지와 간단한 코멘트를 입력해 주세요.</p>
+				<form action="@{/gallery/upload}" method="post" enctype="multipart/form-data">
+					<label>코멘트</label> <input type="text" id="input-comments" name="comment" value="">
+					<label>이미지</label> <input type="file" id="input-file" name="file"> 
+					<input type="submit" tabindex="-1" style="position: absolute; top: -1000px">
+				</form>
+			</div>
+		</div>
+		<th:block th:include="includes/navigation"></th:block>
+		<th:block th:include="includes/footer"></th:block>
+	</div>
+</body>
+</html>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript" sec:authorize="hasRole('ADMIN')">
+$(function() {
+	// 업로드 다이알로그
+	var dialogUpload = $("#dialog-upload-form").dialog({
+		autoOpen: false,
+		height: 280,
+		width: 300,
+		modal: true,
+		buttons: {
+			"업로드": function() {
+				$("#dialog-upload-form form").submit();
+				$(this).dialog("close");
+			},
+			"취소": function() {
+				$(this).dialog("close");
+			}
+		},
+		close: function() {
+			$("#dialog-upload-form form").get(0).reset();	
+		}
+	});
+
+	$("#upload-image").click(function(event) {
+		event.preventDefault();
+		dialogUpload.dialog("open");
+	});
+});
+</script>

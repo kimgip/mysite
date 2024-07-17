@@ -12,6 +12,7 @@ import com.poscodx.mysite.vo.UserVo;
 
 @Controller
 public class MainController {
+	
 	@Autowired
 	private ServletContext servletContext;
 	
@@ -26,11 +27,11 @@ public class MainController {
 	public String message01() {
 		return "Hello World";
 	}
-
+	
 	@ResponseBody
 	@RequestMapping("/msg02")
 	public String message02(String name) {
-		return "안녕~ "+name;
+		return "안녕~ " + name;
 	}
 
 	@ResponseBody
@@ -40,6 +41,7 @@ public class MainController {
 		vo.setNo(1L);
 		vo.setName("둘리");
 		vo.setEmail("dooly@gmail.com");
-		return vo;
+		
+		return vo; 
 	}
 }

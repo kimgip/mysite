@@ -8,7 +8,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.poscodx.mysite.security.UserDetailsImpl;
 import com.poscodx.mysite.vo.UserVo;
 
 @Repository
@@ -23,39 +22,39 @@ public class UserRepository {
 		return sqlSession.insert("user.insert", vo);
 	}
 
-	public UserVo findByEmailAndPasssword(String email, String password) {
+	public UserVo findByEmailAndPassword(String email, String password) {
 		return sqlSession.selectOne(
-				"user.findByEmailAndPasssword", 
-				Map.of("email", email, "password", password));
+			"user.findByEmailAndPassword",
+			Map.of("email", email, "password", password));
 	}
 
 	public UserVo findByNo(Long no) {
 		return sqlSession.selectOne("user.findByNo", no);
 	}
 
-	public <R> R findByEmail(String email, Class<R> resultType) {
-		FindByEmailResultHandler<R> findByEmailResultHandler = new FindByEmailResultHandler<>(resultType);
-		sqlSession.select("user.findByEmail", email, findByEmailResultHandler);
-		return findByEmailResultHandler.result;
-	}
-	
 	public int update(UserVo vo) {
 		return sqlSession.update("user.update", vo);
 	}
 	
-	private class FindByEmailResultHandler<R> implements ResultHandler<Map<String, Object>>{
-		private R result;
+	public <R> R findByEmail(String email, Class<R> resultType) {
+		FindByEmailResultHandler<R> findByEmailResultHandler = new FindByEmailResultHandler<>(resultType);
+		sqlSession.select("user.findByEmail", email, findByEmailResultHandler);
 		
+		return findByEmailResultHandler.result;
+	}
+	
+	private class FindByEmailResultHandler<R> implements ResultHandler<Map<String, Object>> {
+		private R result;
 		private Class<R> resultType;
 		
-		public FindByEmailResultHandler(Class<R> resultType) {
+		FindByEmailResultHandler(Class<R> resultType) {
 			this.resultType = resultType;
 		}
 		
 		@Override
 		public void handleResult(ResultContext<? extends Map<String, Object>> resultContext) {
 			Map<String, Object> resultMap = resultContext.getResultObject();
-			this.result = new ObjectMapper().convertValue(resultMap, resultType);
+			result = new ObjectMapper().convertValue(resultMap, resultType);
 		}
 	}
 }

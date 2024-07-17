@@ -1,7 +1,5 @@
 package com.poscodx.mysite.controller.api;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,12 +13,13 @@ import com.poscodx.mysite.vo.UserVo;
 @RestController("userApiController")
 @RequestMapping("/user/api")
 public class UserController {
+	
 	@Autowired
 	private UserService userService;
-
+	
 	@GetMapping("/checkemail")
 	public JsonResult checkEmail(@RequestParam(value="email", required=true, defaultValue="") String email) {
 		UserVo vo = userService.getUser(email);
-		return JsonResult.success(vo != null);
+		return JsonResult.success(vo != null); 
 	}
 }

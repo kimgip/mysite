@@ -4,89 +4,94 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.Cookie;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.poscodx.mysite.repository.BoardRepository;
 import com.poscodx.mysite.vo.BoardVo;
 
 @Service
 public class BoardService {
+	private static final int LIST_SIZE = 5; //리스팅되는 게시물의 수
+	private static final int PAGE_SIZE = 5; //페이지 리스트의 페이지 수
+	
 	@Autowired
-	BoardRepository boardRepository;
+	private BoardRepository boardRepository;
 	
-	public BoardVo getViewInfo(Long no) {
-		return boardRepository.findViewInfoByNo(no);
-	}
-	
-	public void addContents(BoardVo vo) {
-		if(vo.getGroupNo() != 0) { // 답글
-			boardRepository.updateOrderNo(vo);
+	@Transactional
+	public void addContents(BoardVo boardVo) {
+		if(boardVo.getGroupNo() != null) {
+			boardRepository.updateOrderNo(boardVo.getGroupNo(), boardVo.getOrderNo());
 		}
-		boardRepository.insert(vo);
+		
+		boardRepository.insert(boardVo);
 	}
 	
 	public BoardVo getContents(Long no) {
-		// view
-		boolean visited = false;
+		BoardVo boardVo = boardRepository.findByNo(no);
 		
-		if(!visited) {
-			boardRepository.hitByNo(no);
+		if(boardVo != null) {
+			boardRepository.updateHit(no);
 		}
 		
-		return boardRepository.findViewByNo(no);
+		return boardVo;
+	}
+
+	public BoardVo getContents(Long no, Long userNo) {
+		BoardVo boardVo = boardRepository.findByNoAndUserNo(no, userNo);
+		return boardVo;
 	}
 	
-	public BoardVo getContents(Long boardNo, Long userNo) {
-		// modify view
-		// no, title, contents, userNo
-		BoardVo vo = boardRepository.findViewByNo(boardNo); 
-		if (userNo != vo.getUserNo()) {
-			vo = null;
-		}
-		return vo;
-	}
-	
-	public void updateContents(BoardVo vo) {
-		// modify
-		boardRepository.update(vo);
+	public void modifyContents(BoardVo boardVo) {
+		boardRepository.update(boardVo);
 	}
 	
 	public void deleteContents(Long boardNo, Long userNo) {
-		boardRepository.deleteByNoAndUserNo(boardNo, userNo);
+		boardRepository.delete(boardNo, userNo);
 	}
 	
-	public Map<String, Object> getContentsList(Long currentPage, String keyword) {
-		int listSize = 5;
-		int pagerSize = 5;
-		List<BoardVo> list = boardRepository.findViewList(currentPage, keyword, listSize);
+	public Map<String, Object> getContentsList(int currentPage, String keyword) {
+		
+		//1. 페이징을 위한 기본 데이터 계산
+		int totalCount = boardRepository.getTotalCount(keyword); 
+		int pageCount = (int)Math.ceil((double)totalCount / LIST_SIZE);
+		int blockCount = (int)Math.ceil((double)pageCount / PAGE_SIZE);
+		int currentBlock = (int)Math.ceil((double)currentPage / PAGE_SIZE);
+		
+		//2. 파라미터 page 값  검증
+		if(currentPage > pageCount) {
+			currentPage = pageCount;
+			currentBlock = (int)Math.ceil((double)currentPage / PAGE_SIZE);
+		}		
+		
+		if(currentPage < 1) {
+			currentPage = 1;
+			currentBlock = 1;
+		}
+		
+		//3. view에서 페이지 리스트를 렌더링 하기위한 데이터 값 계산
+		int beginPage = currentBlock == 0 ? 1 : (currentBlock - 1) * PAGE_SIZE + 1;
+		int prevPage = (currentBlock > 1 ) ? (currentBlock - 1) * PAGE_SIZE : 0;
+		int nextPage = (currentBlock < blockCount) ? currentBlock * PAGE_SIZE + 1 : 0;
+		int endPage = (nextPage > 0) ? (beginPage - 1) + LIST_SIZE : pageCount;
+		
+		//4. 리스트 가져오기
+		List<BoardVo> list = boardRepository.findAllByPageAndKeword(keyword, currentPage, LIST_SIZE);
+		
+		//5. 리스트 정보를 맵에 저장
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("list", list);
-		map.put("kyword", keyword);
-		
-		int totalCount = boardRepository.findTotalCount(keyword);
-		
-		int endPage = (int) Math.ceil(totalCount / listSize);
-		int prevPage = ((int)((currentPage - 1) / pagerSize) * pagerSize) + 1;
-		if (prevPage < 1) {
-			prevPage = 1;
-		}
-		
 		map.put("totalCount", totalCount);
-//		map.put("listSize", listSize);
+		map.put("listSize", LIST_SIZE);
 		map.put("currentPage", currentPage);
-//		map.put("beginPage", 0);
+		map.put("beginPage", beginPage);
 		map.put("endPage", endPage);
 		map.put("prevPage", prevPage);
-//		map.put("nextPage", 0);
-		map.put("pagerSize", pagerSize);
-		map.put("topViewNo", totalCount - listSize * (currentPage - 1));
+		map.put("nextPage", nextPage);
+		map.put("keyword", keyword);
 
 		return map;
 	}
-	
-	
 }

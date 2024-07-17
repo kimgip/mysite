@@ -8,7 +8,7 @@ import com.poscodx.mysite.vo.SiteVo;
 @Repository
 public class SiteRepository {
 	private SqlSession sqlSession;
-
+	
 	public SiteRepository(SqlSession sqlSession) {
 		this.sqlSession = sqlSession;
 	}
@@ -16,8 +16,8 @@ public class SiteRepository {
 	public SiteVo find() {
 		return sqlSession.selectOne("site.find");
 	}
-	
-	public int update(SiteVo vo) {
-		return sqlSession.update("site.update", vo);
-	}
+
+	public void update(SiteVo vo) {
+		sqlSession.update("site.update", vo);
+	}	
 }

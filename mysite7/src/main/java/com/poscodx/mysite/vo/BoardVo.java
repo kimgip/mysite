@@ -1,46 +1,16 @@
 package com.poscodx.mysite.vo;
 
 public class BoardVo {
-	@Override
-	public String toString() {
-		return "BoardVo [no=" + no + ", title=" + title + ", contents=" + contents + ", hit=" + hit + ", regDate="
-				+ regDate + ", groupNo=" + groupNo + ", orderNo=" + orderNo + ", depth=" + depth + ", userNo=" + userNo
-				+ ", userName=" + userName + "]";
-	}
 	private Long no;
 	private String title;
 	private String contents;
-	private int hit;
 	private String regDate;
-	private int groupNo;
-	private int orderNo;
-	private int depth;
+	private Integer hit;
+	private Integer groupNo;
+	private Integer orderNo;
+	private Integer depth;
 	private Long userNo;
 	private String userName;
-	
-	public BoardVo() {
-		
-	}
-	
-	public BoardVo(Long no, String title, String contents, Long userNo) {
-		super();
-		this.no = no;
-		this.title = title;
-		this.contents = contents;
-		this.userNo = userNo;
-	}
-
-	public BoardVo(Long no, String title, int hit, String regDate, int groupNo, int orderNo, int depth, String userName) {
-		this.no = no;
-		this.title = title;
-		this.hit = hit;
-		this.regDate = regDate;
-		this.groupNo = groupNo;
-		this.orderNo = orderNo;
-		this.depth = depth;
-		this.userName = userName;
-	}
-
 	public Long getNo() {
 		return no;
 	}
@@ -59,34 +29,34 @@ public class BoardVo {
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	public int getHit() {
-		return hit;
-	}
-	public void setHit(int hit) {
-		this.hit = hit;
-	}
 	public String getRegDate() {
 		return regDate;
 	}
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
 	}
-	public int getGroupNo() {
+	public Integer getHit() {
+		return hit;
+	}
+	public void setHit(Integer hit) {
+		this.hit = hit;
+	}
+	public Integer getGroupNo() {
 		return groupNo;
 	}
-	public void setGroupNo(int groupNo) {
+	public void setGroupNo(Integer groupNo) {
 		this.groupNo = groupNo;
 	}
-	public int getOrderNo() {
+	public Integer getOrderNo() {
 		return orderNo;
 	}
-	public void setOrderNo(int orderNo) {
+	public void setOrderNo(Integer orderNo) {
 		this.orderNo = orderNo;
 	}
-	public int getDepth() {
+	public Integer getDepth() {
 		return depth;
 	}
-	public void setDepth(int depth) {
+	public void setDepth(Integer depth) {
 		this.depth = depth;
 	}
 	public Long getUserNo() {
@@ -100,5 +70,11 @@ public class BoardVo {
 	}
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+	@Override
+	public String toString() {
+		return "BoardVo [no=" + no + ", title=" + title + ", contents=" + contents + ", regDate=" + regDate + ", hit="
+				+ hit + ", groupNo=" + groupNo + ", orderNo=" + orderNo + ", depth=" + depth + ", userNo=" + userNo
+				+ ", userName=" + userName + "]";
 	}
 }

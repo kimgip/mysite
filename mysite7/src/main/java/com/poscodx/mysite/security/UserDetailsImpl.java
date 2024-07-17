@@ -9,14 +9,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.poscodx.mysite.vo.UserVo;
 
-public class UserDetailsImpl extends UserVo implements UserDetails {
+public class UserDetailsImpl extends UserVo implements UserDetails  {
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return Arrays.asList(
-				new SimpleGrantedAuthority("ROLE_"+getRole())
-			);
+		return Arrays.asList(new SimpleGrantedAuthority("ROLE_" + getRole()));
 	}
 
 	@Override

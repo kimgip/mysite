@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class GuestbookLogRepository {
-
 	private SqlSession sqlSession;
 	
 	public GuestbookLogRepository(SqlSession sqlSession) {
@@ -20,7 +19,7 @@ public class GuestbookLogRepository {
 		return sqlSession.update("guestbooklog.update-increase");
 	}
 	
-	public int update(Long no) {
-		return sqlSession.update("guestbooklog.update-decrease", no);
+	public int update(String regDate) {
+		return sqlSession.update("guestbooklog.update-decrease", regDate);
 	}
 }

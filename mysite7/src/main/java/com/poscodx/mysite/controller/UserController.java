@@ -1,5 +1,7 @@
 package com.poscodx.mysite.controller;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import com.poscodx.mysite.service.UserService;
 import com.poscodx.mysite.vo.UserVo;
 
@@ -29,38 +30,47 @@ public class UserController {
 	public String join(@ModelAttribute @Valid UserVo vo, BindingResult result, Model model) {
 		if(result.hasErrors()) {
 //			model.addAttribute("userVo", vo);
-			
+
 //			List<ObjectError> list = result.getAllErrors();
 //			for(ObjectError error:list) {
 //				System.out.println(error);
 //			}
-			model.addAllAttributes(result.getModel());
+			Map<String, Object> map = result.getModel();			
+//			Set<String> s = map.keySet();
+//			for(String key : s) {
+//				model.addAttribute(key, map.get(key));
+//			}
+			model.addAllAttributes(map);
+			
 			return "user/join";
 		}
+
 		userService.join(vo);
 		return "redirect:/user/joinsuccess";
 	}
-	
+
 	@RequestMapping(value="/joinsuccess", method=RequestMethod.GET)
 	public String joinsuccess() {
 		return "user/joinsuccess";
 	}
 	
-	@RequestMapping("/login")
+	@RequestMapping(value="/login")
 	public String login() {
 		return "user/login";
 	}
 	
 	@RequestMapping(value="/update", method=RequestMethod.GET)
 	public String update(Authentication authentication, Model model) {
-//		SecurityContextHolder(Spring Security ThreadLocal Helper Class) 기반
+//      1. SecurityContextHolder(Spring Security ThreadLocal Helper Class) 기반		
 //		SecurityContext sc = SecurityContextHolder.getContext();
-		
-//		HttpSession 기반
-//		SecurityContext sc = (SecurityContext)session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
 //		Authentication authentication = sc.getAuthentication();
-		UserVo vo = userService.getUser(((UserVo)authentication.getPrincipal()).getNo());
-		
+
+//      2. HttpSession 기반		
+//		SecurityContext sc = (SecurityContext)session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY)
+//		Authentication authentication = sc.getAuthentication();
+
+		UserVo authUser = (UserVo)authentication.getPrincipal();
+		UserVo vo = userService.getUser(authUser.getNo());
 		model.addAttribute("userVo", vo);
 		
 		return "user/update";
@@ -68,13 +78,12 @@ public class UserController {
 	
 	@RequestMapping(value="/update", method=RequestMethod.POST)
 	public String update(Authentication authentication, UserVo vo) {
-		UserVo authVo = (UserVo)authentication.getPrincipal();
-		vo.setNo(authVo.getNo());
+		UserVo authUser = (UserVo)authentication.getPrincipal();
+		vo.setNo(authUser.getNo());
 		
 		userService.update(vo);
 		
-		authVo.setName(vo.getName());
+		authUser.setName(vo.getName());
 		return "redirect:/user/update";
 	}
-	
 }

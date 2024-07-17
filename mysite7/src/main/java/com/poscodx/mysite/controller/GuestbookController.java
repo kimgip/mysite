@@ -8,38 +8,40 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.poscodx.mysite.service.GuestBookService;
+import com.poscodx.mysite.service.GuestbookService;
 import com.poscodx.mysite.vo.GuestbookVo;
 
 @Controller
 @RequestMapping("/guestbook")
 public class GuestbookController {
+	
 	@Autowired
-	private GuestBookService guestBookService;
+	private GuestbookService guestbookService;
+	
 	
 	@RequestMapping("")
 	public String index(Model model) {
-		List<GuestbookVo> list = guestBookService.getContentsList();
+		List<GuestbookVo> list = guestbookService.getContentsList();
 		model.addAttribute("list", list);
-		return "views/guestbook/list";
+		return "guestbook/index";
 	}
 	
-	@RequestMapping("/insert")
-	public String insert(GuestbookVo vo) {
-		guestBookService.addContents(vo);
+	@RequestMapping("/add")
+	public String index(GuestbookVo vo) {
+		guestbookService.addContents(vo);
 		return "redirect:/guestbook";
 	}
 	
-	@RequestMapping(value="/delete/{no}", method=RequestMethod.GET)
-	public String delete(@PathVariable("no") Long no, Model model) {
-		model.addAttribute("no", no);
+	@RequestMapping(value="/delete/{no2}", method=RequestMethod.GET)
+	public String delete(@PathVariable("no2") Long no) {
 		return "guestbook/delete";
 	}
 	
-	@RequestMapping(value="/delete", method=RequestMethod.POST)
-	public String delete(Long no, String password) {
-		guestBookService.deleteContents(no, password);
+	@RequestMapping(value="/delete/{no}", method=RequestMethod.POST)
+	public String delete(@PathVariable("no") Long no, @RequestParam(value="password", required=true, defaultValue="") String password) {
+		guestbookService.deleteContents(no, password);
 		return "redirect:/guestbook";
-	}
+	}	
 }
