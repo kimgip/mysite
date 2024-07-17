@@ -3,8 +3,6 @@ package com.poscodx.mysite.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.ibatis.ognl.enhance.LocalReference;
-import org.apache.tomcat.util.descriptor.LocalResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.LocaleResolver;
@@ -28,7 +26,7 @@ public class SiteInterceptor implements HandlerInterceptor {
 		}
 		
 		// Locale
-		System.out.println("resolver-locale: "+localeResolver.resolveLocale(request).getLanguage());
+		//System.out.println("resolver-locale: "+localeResolver.resolveLocale(request).getLanguage());
 		request.setAttribute("language", localeResolver.resolveLocale(request).getLanguage());
 		return true;
 	}
